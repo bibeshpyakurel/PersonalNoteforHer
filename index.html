@@ -109,14 +109,7 @@ function initializePage() {
     window.pageOffsetY = offsetY;
     
     // Setup content positioning
-    const content = document.getElementById('content');
-    const code = document.getElementById('code');
-    const heart = document.getElementById('loveHeart');
-    
-    content.style.width = (heart.offsetWidth + code.offsetWidth) + 'px';
-    content.style.height = Math.max(heart.offsetHeight, code.offsetHeight) + 'px';
-    content.style.marginTop = Math.max((window.innerHeight - content.offsetHeight) / 2, 10) + 'px';
-    content.style.marginLeft = Math.max((window.innerWidth - content.offsetWidth) / 2, 10) + 'px';
+    updateContentLayout();
     
     // Typewriter effect
     typewriterEffect(code);
@@ -158,16 +151,32 @@ let resizeTimeout;
 window.addEventListener('resize', function() {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(function() {
-        const loveHeart = document.getElementById('loveHeart');
-        const code = document.getElementById('code');
-        const content = document.getElementById('content');
-        
-        content.style.width = (loveHeart.offsetWidth + code.offsetWidth) + 'px';
-        content.style.height = Math.max(loveHeart.offsetHeight, code.offsetHeight) + 'px';
-        content.style.marginTop = Math.max((window.innerHeight - content.offsetHeight) / 2, 10) + 'px';
-        content.style.marginLeft = Math.max((window.innerWidth - content.offsetWidth) / 2, 10) + 'px';
+        updateContentLayout();
     }, 250);
 });
+
+function updateContentLayout() {
+    const loveHeart = document.getElementById('loveHeart');
+    const code = document.getElementById('code');
+    const content = document.getElementById('content');
+    if (!loveHeart || !code || !content) return;
+
+    const idealWidth = loveHeart.offsetWidth + code.offsetWidth;
+    const idealHeight = Math.max(loveHeart.offsetHeight, code.offsetHeight);
+
+    // If viewport is smaller, let CSS handle wrapping and allow scrolling
+    if (idealWidth + 40 > window.innerWidth) {
+        content.style.width = '100%';
+        content.style.height = 'auto';
+        content.style.marginTop = '20px';
+        content.style.marginLeft = '0';
+    } else {
+        content.style.width = idealWidth + 'px';
+        content.style.height = idealHeight + 'px';
+        content.style.marginTop = Math.max((window.innerHeight - idealHeight) / 2, 10) + 'px';
+        content.style.marginLeft = Math.max((window.innerWidth - idealWidth) / 2, 10) + 'px';
+    }
+}
 
 function populateBackgroundText() {
     const phrases = [

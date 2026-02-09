@@ -7,9 +7,10 @@ body {
     padding: 0;
     background: linear-gradient(135deg, #E6D7F0 0%, #D4C5E2 50%, #E8D5F2 100%);
     font-size: 12px;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     font-family: "sans-serif";
-    height: 100vh;
+    min-height: 100vh;
     position: relative;
 }
 
