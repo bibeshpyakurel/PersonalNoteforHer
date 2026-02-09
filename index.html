@@ -1,0 +1,275 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script src="https://kit.fontawesome.com/a14ae32021.js" crossorigin="anonymous"></script>
+<title>This one is for my Varchhu — by Bibesh</title>
+
+<link href="css/default.css" rel="stylesheet">
+<script src="js/garden.js"></script>
+<script src="js/functions.js"></script>
+</head>
+
+<body>
+
+<div id="fallingTextContainer"></div>
+
+<div id="mainDiv">
+	<div id="content">
+		<div id="code">
+            <span class="comments">/**</span><br />
+            <span class="space"/><span class="comments">*A NOTE FOR ANUSHKA</span><br />
+            <span class="space"/><span class="comments">*/</span><br />
+            Hey Anushka!<br />
+            Do you remember when we first spoke online?<br />
+            <span class="comments">// The night I messaged you — Apr 13, 2025 12:32 AM (EST)</span><br />
+            Since that message, everything changed;<br />
+            <span class="comments">// Your laugh, your words, your kindness.</span><br />
+            You filled my days with warmth and quiet joy;<br />
+            As messages turned into late-night conversations;<br />
+            Our love grew into something I cherish deeply;<br />
+            We shared small moments, big dreams, and honest talks;<br />
+            There were tough nights, and there will be more;<br />
+            <span class="comments">// Still, we always find our way back to each other.</span><br />
+            Through every up and down my feelings only deepened;<br />
+            <br>
+            All I want to say is:<br />
+            I will hold you close, always;<br />
+            <br>
+            Now, if you want to know more about how I feel, please scroll down<br />
+            <br>
+            <span id="heartspan">
+            <i class="fas fa-heart" id="icon"></i>
+            </span>
+
+            <br /><br />
+            <span class="comments">
+            // Because one day isn’t enough to love you…
+            </span><br />
+            So I made something special for you;<br />
+            A little Valentine journey — just us;<br /><br />
+            Click each day… and feel how much you mean to me ❤️
+
+            <div id="valentineWeek">
+                <div class="valentine-buttons">
+                    <button class="valentine-btn" data-day="rose">🌹 Rose Day</button>
+                    <button class="valentine-btn" data-day="propose">💍 Propose Day</button>
+                    <button class="valentine-btn" data-day="chocolate">🍫 Chocolate Day</button>
+                    <button class="valentine-btn" data-day="teddy">🧸 Teddy Day</button>
+                    <button class="valentine-btn" data-day="promise">🤞 Promise Day</button>
+                    <button class="valentine-btn" data-day="hug">🤗 Hug Day</button>
+                    <button class="valentine-btn" data-day="kiss">💋 Kiss Day</button>
+                    <button class="valentine-btn" data-day="valentine">❤️ Valentine’s Day</button>
+                </div>
+                <div id="valentineMessage" class="valentine-message"></div>
+            </div>
+		</div>
+		<div id="loveHeart">
+			<canvas id="garden"></canvas>
+			<div id="words">
+				<div id="messages">
+					<div style="font-size: 18px; font-weight: 500; margin-bottom: 15px; letter-spacing: 0.5px;">Counting since the day I texted you</div>
+					<div id="elapseClock"></div>
+					<div id="elapsedMonths"></div>
+					<div id="elapsedYears"></div>
+				</div>
+                <div id="loveu" class="cute">
+                    <div class="love-text">I ❤️ you so much</div>
+                    <div class="signature">— Your Bibby</div>
+                </div>
+			</div>
+		</div>
+	</div>
+    <div id="credit">Created with ❤️ by Bibesh</div>
+</div>
+
+<script>
+// Configuration - customize these values
+const CONFIG = {
+    anniversaryDate: new Date(2025, 3, 13, 0, 32, 0), // April 13, 2025, 12:32 AM EST
+    recipientName: "Anushka",
+    senderName: "BIBESH",
+    message: "I LOVE YOU SO MUCH"
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    initializePage();
+});
+
+function initializePage() {
+    // Populate background text with "I love you" in multiple languages
+    populateBackgroundText();
+    
+    const loveHeart = document.getElementById('loveHeart');
+    const offsetX = loveHeart.offsetWidth / 2;
+    const offsetY = loveHeart.offsetHeight / 2 - 55;
+    
+    window.pageOffsetX = offsetX;
+    window.pageOffsetY = offsetY;
+    
+    // Setup content positioning
+    const content = document.getElementById('content');
+    const code = document.getElementById('code');
+    const heart = document.getElementById('loveHeart');
+    
+    content.style.width = (heart.offsetWidth + code.offsetWidth) + 'px';
+    content.style.height = Math.max(heart.offsetHeight, code.offsetHeight) + 'px';
+    content.style.marginTop = Math.max((window.innerHeight - content.offsetHeight) / 2, 10) + 'px';
+    content.style.marginLeft = Math.max((window.innerWidth - content.offsetWidth) / 2, 10) + 'px';
+    
+    // Typewriter effect
+    typewriterEffect(code);
+    
+    // Start animations after delay
+    setTimeout(function () {
+        startHeartAnimation();
+    }, 5000);
+
+    // Start time tracking
+    timeElapse(CONFIG.anniversaryDate);
+    setInterval(function () {
+        timeElapse(CONFIG.anniversaryDate);
+    }, 500);
+}
+
+function typewriterEffect(element) {
+    const str = element.innerHTML;
+    element.innerHTML = '';
+    let progress = 0;
+    
+    const timer = setInterval(function() {
+        const current = str.charAt(progress);
+        if (current == '<') {
+            progress = str.indexOf('>', progress) + 1;
+        } else {
+            progress++;
+        }
+        element.innerHTML = str.substring(0, progress) + (progress & 1 ? '_' : '');
+        if (progress >= str.length) {
+            clearInterval(timer);
+            element.innerHTML = str;
+        }
+    }, 75);
+}
+
+// Handle window resize without full page reload
+let resizeTimeout;
+window.addEventListener('resize', function() {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(function() {
+        const loveHeart = document.getElementById('loveHeart');
+        const code = document.getElementById('code');
+        const content = document.getElementById('content');
+        
+        content.style.width = (loveHeart.offsetWidth + code.offsetWidth) + 'px';
+        content.style.height = Math.max(loveHeart.offsetHeight, code.offsetHeight) + 'px';
+        content.style.marginTop = Math.max((window.innerHeight - content.offsetHeight) / 2, 10) + 'px';
+        content.style.marginLeft = Math.max((window.innerWidth - content.offsetWidth) / 2, 10) + 'px';
+    }, 250);
+});
+
+function populateBackgroundText() {
+    const phrases = [
+        // English - majority
+        "I LOVE YOU",
+        "I LOVE YOU",
+        "I LOVE YOU",
+        "I LOVE YOU",
+        // Nepali - majority
+        "म तिमीलाई माया गर्छु",
+        "म तिमीलाई माया गर्छु",
+        "म तिमीलाई माया गर्छु",
+        "म तिमीलाई माया गर्छु",
+        // Spanish
+        "TE AMO",
+        "TE AMO",
+        // French
+        "JE T'AIME",
+        "JE T'AIME",
+        // Chinese
+        "我爱你",
+        "我爱你",
+        // Italian
+        "TI AMO",
+        // German
+        "ICH LIEBE DICH",
+        // Portuguese
+        "EU TE AMO",
+        // Russian
+        "Я ЛЮБЛЮ ТЕБЯ",
+        // Japanese
+        "私はあなたを愛しています",
+        // Korean
+        "나는 너를 사랑한다",
+        // Thai
+        "ฉันรักคุณ",
+        // Arabic
+        "أنا أحبك",
+        // Hindi
+        "मैं तुम्हें प्यार करता हूँ"
+    ];
+    
+    const container = document.getElementById('fallingTextContainer');
+    
+    // Create falling text elements continuously
+    setInterval(() => {
+        const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+        const element = document.createElement('div');
+        element.className = 'falling-text';
+        element.textContent = phrase;
+        
+        // Random horizontal position
+        const randomX = Math.random() * window.innerWidth;
+        element.style.left = randomX + 'px';
+        element.style.top = '-50px';
+        
+        // Random rotation direction
+        const randomRotation = (Math.random() * 60 - 30); // -30 to 30 degrees
+        element.style.transform = `rotateZ(${randomRotation}deg)`;
+        
+        // Random fall duration (8-15 seconds)
+        const duration = Math.random() * 7 + 8;
+        element.style.animationDuration = duration + 's';
+        
+        // Random opacity
+        element.style.opacity = Math.random() * 0.35 + 0.35;
+        
+        container.appendChild(element);
+        
+        // Remove element after animation completes
+        setTimeout(() => {
+            element.remove();
+        }, duration * 1000);
+    }, 300); // Create new text every 300ms
+}
+
+const valentineMessages = {
+    rose: `🌹 Rose Day\n\nIf I could,\nI’d send you a garden instead of one rose…\n\nBut every flower would still be jealous of you.\n\nSo here’s my rose —\nCarrying all my love, softly reaching your heart.`,
+    propose: `💍 Propose Day\n\nIf loving you was a question,\nMy answer would always be YES.\n\nSo today, once again…\nI choose you.\n\nNot just for now —\nBut for every tomorrow waiting ahead of us.`,
+    chocolate: `🍫 Chocolate Day\n\nLife with you feels sweeter than chocolate…\n\nAnd trust me,\nI don’t even like sharing chocolate —\nBut I’d share my last piece with you.`,
+    teddy: `🧸 Teddy Day\n\nWhenever I’m not around,\nI hope you hug a teddy…\n\nAnd pretend it’s me —\nHolding you tight,\nProtecting your peace.`,
+    promise: `🤞 Promise Day\n\nI promise to stay —\nEven on days I don’t understand you.\n\nI promise to listen —\nEven when words are hard to say.\n\nAnd most of all,\nI promise to love you louder than life gets.`,
+    hug: `🤗 Hug Day\n\nIf you were here right now,\nI wouldn’t say a word…\n\nI’d just pull you close —\nAnd let my arms explain everything.`,
+    kiss: `💋 Kiss Day\n\nA kiss from you isn’t just a kiss…\n\nIt’s my peace,\nMy silence,\nMy favorite place to rest my soul.`,
+    valentine: `❤️ Valentine’s Day\n\nOut of all the people in this world…\n\nMy heart found you.\n\nAnd if I had to live life again —\nI’d still search for you,\nStill fall for you,\nStill choose you…\n\nEvery single time.`
+};
+
+document.addEventListener('click', function (event) {
+    const button = event.target.closest('.valentine-btn');
+    if (!button) return;
+
+    const day = button.getAttribute('data-day');
+    const message = valentineMessages[day];
+    const messageBox = document.getElementById('valentineMessage');
+
+    if (messageBox && message) {
+        messageBox.textContent = message;
+        messageBox.classList.add('visible');
+    }
+});
+
+
+</script>
+</body>
+</html>
