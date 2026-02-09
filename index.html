@@ -164,18 +164,22 @@ function updateContentLayout() {
     const idealWidth = loveHeart.offsetWidth + code.offsetWidth;
     const idealHeight = Math.max(loveHeart.offsetHeight, code.offsetHeight);
 
-    // If viewport is smaller, let CSS handle wrapping and allow scrolling
-    if (idealWidth + 40 > window.innerWidth) {
-        content.style.width = '100%';
-        content.style.height = 'auto';
-        content.style.marginTop = '20px';
-        content.style.marginLeft = '0';
-    } else {
-        content.style.width = idealWidth + 'px';
-        content.style.height = idealHeight + 'px';
-        content.style.marginTop = Math.max((window.innerHeight - idealHeight) / 2, 10) + 'px';
-        content.style.marginLeft = Math.max((window.innerWidth - idealWidth) / 2, 10) + 'px';
-    }
+    content.style.width = idealWidth + 'px';
+    content.style.height = idealHeight + 'px';
+
+    // Scale down to fit smaller viewports while keeping side-by-side layout
+    const availableWidth = Math.max(window.innerWidth - 40, 1);
+    const availableHeight = Math.max(window.innerHeight - 80, 1);
+    const scaleX = availableWidth / idealWidth;
+    const scaleY = availableHeight / idealHeight;
+    const scale = Math.min(1, scaleX, scaleY);
+
+    content.style.transform = `scale(${scale})`;
+    content.style.transformOrigin = 'top center';
+
+    const scaledHeight = idealHeight * scale;
+    content.style.marginTop = Math.max((window.innerHeight - scaledHeight) / 2, 10) + 'px';
+    content.style.marginLeft = Math.max((window.innerWidth - idealWidth * scale) / 2, 10) + 'px';
 }
 
 function populateBackgroundText() {

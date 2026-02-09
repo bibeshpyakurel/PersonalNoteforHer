@@ -63,6 +63,7 @@ body {
     align-items: center;
     max-width: 1400px;
     padding: 0;
+    transform-origin: top center;
 }
 
 #loveHeart {
@@ -332,7 +333,7 @@ body {
 /* Mobile Responsive */
 @media (max-width: 1400px) {
     #content {
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
     }
 }
 
@@ -356,7 +357,7 @@ body {
 
 @media (max-width: 768px) {
     #content {
-        flex-direction: column;
+        flex-direction: row;
         gap: 30px;
     }
     
