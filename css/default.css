@@ -1,10 +1,15 @@
 /* ====================================================================
    A Note — stylesheet
+
+   Mobile first. The base rules below describe a phone: one column, the
+   letter flowing at its natural length, one scroll for the whole page.
+   Everything after that is a min-width query adding room as it appears.
+
    1. Tokens          6. Valentine week
    2. Base            7. The heart
    3. Backdrop        8. Footer
-   4. Layout          9. Motion & print
-   5. The letter
+   4. Layout          9. Wider screens
+   5. The letter     10. Motion & print
    ==================================================================== */
 
 /* ------------------------------------------------------------------
@@ -48,7 +53,7 @@
     /* Shape */
     --r-sm: 10px;
     --r-md: 14px;
-    --r-lg: 22px;
+    --r-lg: 20px;
     --r-pill: 999px;
 
     /* Motion */
@@ -62,7 +67,14 @@
             "Helvetica Neue", Arial, "Noto Sans", sans-serif;
     --serif: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
 
-    --fs-letter: clamp(12.5px, 0.42vw + 11px, 14.5px);
+    /* Sized for a phone first, easing up to a comfortable desktop reading size. */
+    --fs-letter: clamp(13px, 0.4vw + 12px, 14.5px);
+
+    /* Glass is cheap on a laptop and expensive on a five-year-old phone. */
+    --glass-blur: 14px;
+
+    /* Gutter, widened at the first breakpoint. */
+    --gutter: 16px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -115,6 +127,8 @@ html {
 
 body {
     margin: 0;
+    /* svh, not dvh — dvh changes as the mobile URL bar hides and shows,
+       which would resize the layout mid-scroll. */
     min-height: 100vh;
     min-height: 100svh;
     position: relative;
@@ -211,7 +225,6 @@ body::after {
 .falling-text.depth-1 {
     font-size: clamp(11px, 1.1vw, 14px);
     --o: 0.22;
-    filter: blur(0.7px);
 }
 
 .falling-text.depth-2 {
@@ -233,7 +246,7 @@ body::after {
 }
 
 /* ------------------------------------------------------------------
-   4. Layout
+   4. Layout — one column, one scroll
    ------------------------------------------------------------------ */
 
 #mainDiv {
@@ -242,19 +255,24 @@ body::after {
     display: flex;
     flex-direction: column;
     align-items: center;
+    /* svh, not dvh — dvh changes as the mobile URL bar hides and shows,
+       which would resize the layout mid-scroll. */
     min-height: 100vh;
     min-height: 100svh;
-    padding: clamp(16px, 4vh, 48px) clamp(16px, 4vw, 40px);
+
+    /* Keep clear of the notch and the home indicator. */
+    padding-top: max(20px, env(safe-area-inset-top));
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
+    padding-left: max(var(--gutter), env(safe-area-inset-left));
+    padding-right: max(var(--gutter), env(safe-area-inset-right));
 }
 
 #content {
     display: grid;
-    grid-template-columns: minmax(0, 560px) minmax(0, 670px);
-    align-items: center;
-    justify-content: center;
-    gap: clamp(20px, 3vw, 40px);
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
     width: 100%;
-    max-width: 1290px;
+    max-width: 640px;
     margin: auto 0;
 }
 
@@ -272,17 +290,6 @@ body.is-ready #loveHeart {
     transform: none;
 }
 
-body.is-ready #loveHeart {
-    transition-delay: 0.12s;
-}
-
-@media (max-width: 1023px) {
-    #content {
-        grid-template-columns: minmax(0, 620px);
-        gap: clamp(24px, 5vw, 40px);
-    }
-}
-
 /* ------------------------------------------------------------------
    5. The letter
    ------------------------------------------------------------------ */
@@ -291,12 +298,18 @@ body.is-ready #loveHeart {
     position: relative;
     display: flex;
     flex-direction: column;
+
+    /* The letter owns the first screen. This keeps the heart just below the
+       fold, so it waits to bloom until she has scrolled down to it, and it
+       stops the page from reshuffling under her thumb as the letter types. */
+    min-height: calc(100svh - 48px);
+
     border-radius: var(--r-lg);
     background: var(--surface);
     border: 1px solid var(--surface-line);
     box-shadow: var(--shadow-lg);
-    backdrop-filter: blur(24px) saturate(140%);
-    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%);
     overflow: hidden;
 }
 
@@ -315,14 +328,14 @@ body.is-ready #loveHeart {
     display: flex;
     gap: 7px;
     align-items: center;
-    padding: 13px 16px;
+    padding: 12px 14px;
     border-bottom: 1px solid var(--surface-line);
     flex: none;
 }
 
 .letter-chrome span {
-    width: 11px;
-    height: 11px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background: currentColor;
     opacity: 0.55;
@@ -332,49 +345,12 @@ body.is-ready #loveHeart {
 .letter-chrome span:nth-child(2) { color: #febc2e; }
 .letter-chrome span:nth-child(3) { color: #28c840; }
 
-/* Animatable so the fade can ease away instead of snapping. */
-@property --fade {
-    syntax: "<length>";
-    inherits: false;
-    initial-value: 56px;
-}
-
+/* On a phone the letter simply runs at full length — the page is the
+   scroll. The inner scrollport only appears once there are two columns
+   to keep level with (see §9). */
 .letter-scroll {
     position: relative;
-    height: clamp(360px, 56vh, 520px);
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    padding: 22px clamp(18px, 2.4vw, 28px) 26px;
-    scrollbar-width: thin;
-    scrollbar-color: var(--surface-line) transparent;
-
-    /* Fades the last few lines out until you've reached the end. Masking the
-       content beats an overlay gradient — it works on any backdrop, in either
-       theme, without tinting what's underneath. */
-    --fade: 56px;
-    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--fade)), transparent);
-    mask-image: linear-gradient(to bottom, #000 calc(100% - var(--fade)), transparent);
-    transition: --fade 0.4s var(--ease-out);
-}
-
-.letter-card.is-at-end .letter-scroll {
-    --fade: 0px;
-}
-
-.letter-scroll::-webkit-scrollbar {
-    width: 10px;
-}
-
-.letter-scroll::-webkit-scrollbar-thumb {
-    background: var(--surface-line);
-    border-radius: var(--r-pill);
-    border: 3px solid transparent;
-    background-clip: content-box;
-}
-
-.letter-scroll::-webkit-scrollbar-thumb:hover {
-    background: var(--ink-faint);
-    background-clip: content-box;
+    padding: 18px var(--gutter) 22px;
 }
 
 #code {
@@ -382,7 +358,7 @@ body.is-ready #loveHeart {
     color: var(--ink);
     font-family: var(--mono);
     font-size: var(--fs-letter);
-    line-height: 1.95;
+    line-height: 1.9;
     letter-spacing: 0.01em;
     text-wrap: pretty;
 }
@@ -418,15 +394,15 @@ body.is-ready #loveHeart {
 
 #heartspan {
     display: block;
-    margin: 20px 0;
+    margin: 16px 0;
     text-align: center;
 }
 
 #icon {
     display: inline-block;
-    width: 52px;
-    height: 52px;
-    margin: 26px 0;
+    width: 46px;
+    height: 46px;
+    margin: 20px 0;
     color: var(--rose);
     filter: drop-shadow(0 6px 16px var(--rose-glow));
     animation: heart-pulse 1.8s var(--ease-soft) infinite;
@@ -449,13 +425,15 @@ body.is-ready #loveHeart {
 
 .valentine-buttons {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 9px;
     margin-top: 12px;
 }
 
 .valentine-btn {
     position: relative;
+    /* 44px is the smallest thing a thumb can hit reliably. */
+    min-height: 44px;
     padding: 10px 12px;
     font-family: var(--sans);
     font-size: 13px;
@@ -466,11 +444,19 @@ body.is-ready #loveHeart {
     border: 1px solid var(--surface-line);
     border-radius: var(--r-md);
     cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
     transition:
         transform 0.22s var(--ease-out),
         box-shadow 0.22s var(--ease-out),
         border-color 0.22s var(--ease-out),
         background-color 0.22s var(--ease-out);
+}
+
+/* Touch has no hover, so the press itself has to give the feedback. */
+.valentine-btn:active {
+    transform: scale(0.97);
+    border-color: var(--rose);
 }
 
 @media (hover: hover) {
@@ -479,10 +465,10 @@ body.is-ready #loveHeart {
         border-color: var(--rose);
         box-shadow: var(--shadow-md);
     }
-}
 
-.valentine-btn:active {
-    transform: translateY(0) scale(0.985);
+    .valentine-btn:active {
+        transform: translateY(0) scale(0.985);
+    }
 }
 
 .valentine-btn[aria-pressed="true"] {
@@ -493,14 +479,14 @@ body.is-ready #loveHeart {
 
 .valentine-message {
     margin-top: 14px;
-    padding: 16px 18px;
+    padding: 15px 16px;
     border-radius: var(--r-md);
     border-left: 3px solid var(--rose);
     background: var(--surface-raised);
     box-shadow: var(--shadow-sm);
     color: var(--ink);
     font-family: var(--serif);
-    font-size: 14px;
+    font-size: 14.5px;
     line-height: 1.7;
     white-space: pre-wrap;
     text-wrap: pretty;
@@ -528,6 +514,12 @@ body.is-ready #loveHeart {
     max-width: 670px;
     aspect-ratio: 670 / 625;
     margin-inline: auto;
+
+    /* The counter has to scale with the heart it sits inside, not with the
+       viewport — the two diverge badly at tablet widths, where the heart is
+       half its desktop size but the window is still wide. `cqi` below is 1%
+       of this box; the vw values before each one are the fallback. */
+    container-type: inline-size;
 }
 
 /* A glow that warms up once the heart has finished blooming. */
@@ -557,7 +549,7 @@ body.is-ready #loveHeart {
     top: 31%;
     left: 50%;
     transform: translateX(-50%);
-    width: min(78%, 430px);
+    width: min(84%, 430px);
     text-align: center;
     color: var(--ink-soft);
     pointer-events: none;
@@ -575,22 +567,25 @@ body.is-ready #loveHeart {
 }
 
 .counter-label {
-    font-size: clamp(13px, 1.1vw, 16px);
+    font-size: clamp(12px, 3.6vw, 16px);
+    font-size: clamp(12px, 3.6cqi, 16px);
     font-weight: 500;
     letter-spacing: 0.04em;
     color: var(--ink-soft);
-    margin-bottom: 14px;
+    margin-bottom: 12px;
 }
 
 #elapseClock {
-    font-size: clamp(11px, 0.9vw, 13px);
+    font-size: clamp(9px, 2vw, 13px);
+    font-size: clamp(9px, 2cqi, 13px);
     color: var(--ink-soft);
-    line-height: 2.2;
+    line-height: 2.1;
 }
 
 #elapseClock .digit {
     font-family: var(--mono);
-    font-size: clamp(22px, 2.6vw, 34px);
+    font-size: clamp(18px, 5.2vw, 34px);
+    font-size: clamp(18px, 5.2cqi, 34px);
     font-weight: 700;
     font-variant-numeric: tabular-nums;
     color: var(--ink);
@@ -599,24 +594,28 @@ body.is-ready #loveHeart {
 
 #elapsedMonths {
     margin-top: 10px;
-    font-size: clamp(11px, 0.9vw, 13px);
+    font-size: clamp(9px, 2vw, 13px);
+    font-size: clamp(9px, 2cqi, 13px);
     color: var(--ink-soft);
 }
 
 #elapsedYears {
     margin-top: 4px;
-    font-size: clamp(12px, 1vw, 15px);
+    font-size: clamp(10px, 2.3vw, 15px);
+    font-size: clamp(10px, 2.3cqi, 15px);
     font-weight: 600;
     color: var(--ink);
 }
 
 #loveu {
-    margin-top: clamp(24px, 5vw, 56px);
+    margin-top: clamp(14px, 8vw, 56px);
+    margin-top: clamp(14px, 8cqi, 56px);
     text-align: center;
 }
 
 #loveu .love-text {
-    font-size: clamp(15px, 1.5vw, 19px);
+    font-size: clamp(13px, 2.9vw, 19px);
+    font-size: clamp(13px, 2.9cqi, 19px);
     font-weight: 600;
     letter-spacing: 0.03em;
     color: var(--ink);
@@ -626,7 +625,8 @@ body.is-ready #loveHeart {
     display: block;
     margin-top: 7px;
     font-family: var(--serif);
-    font-size: clamp(12px, 1.1vw, 14px);
+    font-size: clamp(10px, 2.1vw, 14px);
+    font-size: clamp(10px, 2.1cqi, 14px);
     font-style: italic;
     color: var(--ink-soft);
 }
@@ -644,7 +644,123 @@ body.is-ready #loveHeart {
 }
 
 /* ------------------------------------------------------------------
-   9. Motion & print
+   9. Wider screens
+   ------------------------------------------------------------------ */
+
+/* Large phones and tablets: more air, slightly softer background text. */
+@media (min-width: 600px) {
+    :root {
+        --gutter: 24px;
+        --glass-blur: 20px;
+    }
+
+    .falling-text.depth-1 {
+        filter: blur(0.7px);
+    }
+
+    .letter-scroll {
+        padding: 22px var(--gutter) 26px;
+    }
+
+    #content {
+        gap: 34px;
+        max-width: 680px;
+    }
+}
+
+/* Two columns, side by side — the layout this page was born with.
+   Here the letter gets a fixed height and its own scrollport so it can
+   stand level with the heart instead of towering over it. */
+@media (min-width: 1024px) {
+    :root {
+        --glass-blur: 24px;
+        --r-lg: 22px;
+    }
+
+    /* Two even columns through the iPad-landscape range — reading the letter
+       matters more here than a big heart. */
+    #content {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        align-items: center;
+        justify-content: center;
+        gap: clamp(20px, 3vw, 40px);
+        max-width: 1000px;
+    }
+
+    body.is-ready #loveHeart {
+        transition-delay: 0.12s;
+    }
+
+    /* Side by side, the card takes its height from the scrollport below. */
+    .letter-card {
+        min-height: 0;
+    }
+
+    .letter-scroll {
+        height: clamp(360px, 56vh, 520px);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        scrollbar-width: thin;
+        scrollbar-color: var(--surface-line) transparent;
+
+        /* Fades the last few lines out until you've reached the end.
+           Masking the content beats an overlay gradient — it works on any
+           backdrop, in either theme, without tinting what's underneath. */
+        --fade: 56px;
+        -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--fade)), transparent);
+        mask-image: linear-gradient(to bottom, #000 calc(100% - var(--fade)), transparent);
+        transition: --fade 0.4s var(--ease-out);
+    }
+
+    .letter-card.is-at-end .letter-scroll {
+        --fade: 0px;
+    }
+
+    .letter-scroll::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    .letter-scroll::-webkit-scrollbar-thumb {
+        background: var(--surface-line);
+        border-radius: var(--r-pill);
+        border: 3px solid transparent;
+        background-clip: content-box;
+    }
+
+    .letter-scroll::-webkit-scrollbar-thumb:hover {
+        background: var(--ink-faint);
+        background-clip: content-box;
+    }
+
+    #code {
+        line-height: 1.95;
+    }
+
+    #icon {
+        width: 52px;
+        height: 52px;
+        margin: 26px 0;
+    }
+}
+
+/* Room for both at full size: the letter at a comfortable measure, the heart
+   at the dimensions its curve was originally tuned for. */
+@media (min-width: 1200px) {
+    #content {
+        grid-template-columns: minmax(0, 560px) minmax(0, 670px);
+        max-width: 1290px;
+    }
+}
+
+/* Animatable so the scroll fade eases away instead of snapping. */
+@property --fade {
+    syntax: "<length>";
+    inherits: false;
+    initial-value: 56px;
+}
+
+/* ------------------------------------------------------------------
+   10. Motion & print
    ------------------------------------------------------------------ */
 
 @media (prefers-reduced-motion: reduce) {

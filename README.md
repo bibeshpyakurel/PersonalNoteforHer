@@ -13,7 +13,25 @@ never stops. Multilingual "I love you" falls quietly in the background.
 - A live counter: days/hours/minutes/seconds, calendar-aware months, decimal years
 - Valentine week — eight days, eight notes
 - Light and dark themes, chosen automatically from the system
-- Zero dependencies, zero build step, ~30 KB total
+- Mobile first, and side by side on a wide screen
+- Zero dependencies, zero build step, ~55 KB total, no third-party requests
+
+## 📱 How it adapts
+
+The stylesheet is written mobile first: the base rules describe a phone, and
+each `min-width` query adds room as it appears.
+
+| Width | Layout |
+| --- | --- |
+| **< 1024px** | One column, one page scroll. The letter fills the first screen and runs at its full natural length; the heart sits below it. |
+| **≥ 1024px** | Two even columns — the letter gets its own scrollport so it stands level with the heart. |
+| **≥ 1200px** | The letter settles at 560px and the heart at the 670px its curve was tuned for. |
+
+On a phone the heart waits below the fold and blooms **when she scrolls to
+it**, so the animation never plays to an empty screen. The counter inside the
+heart is sized with container queries, so it scales with the heart rather than
+the window — on a phone it renders at 19px, on a desktop at 34px, and it stays
+inside the shape at every size in between.
 
 ## 🚀 Run it
 
@@ -63,6 +81,8 @@ js/functions.js     choreography: typewriter, heart, counter, rain, buttons
   animation, and any keypress or focus jumps straight to the end.
 - Every loop parks itself: the canvas stops rendering when the last petal
   finishes, and the counter and background rain pause when the tab is hidden.
+- Phones get a thinner, slower background rain (20 phrases vs 46) and a lighter
+  glass blur; tap targets are 44px.
 - Prints cleanly — the letter alone, on white.
 
 ## 📝 License

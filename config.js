@@ -54,9 +54,11 @@ const CONFIG = {
      * The "I love you" rain in the background.
      * ------------------------------------------------------------- */
     fallingText: {
-        spawnInterval: 300,  // ms between new phrases
-        maxOnScreen: 46,     // hard cap, keeps the DOM light
-        minDuration: 8,      // seconds to fall
+        spawnInterval: 300,         // ms between new phrases
+        maxOnScreen: 46,            // hard cap, keeps the DOM light
+        spawnIntervalCompact: 520,  // phones (< 600px): thinner and slower
+        maxOnScreenCompact: 20,
+        minDuration: 8,             // seconds to fall
         maxDuration: 15
     }
 };

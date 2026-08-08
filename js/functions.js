@@ -51,8 +51,13 @@
                 revealMessages(false);
                 return;
             }
-            heart.bloom(function () {
-                revealMessages(false);
+            // On a phone the heart sits below the letter. Waiting until it's
+            // actually on screen means she watches it bloom instead of
+            // scrolling down to a heart that already finished without her.
+            whenOnScreen(heartHost, function () {
+                heart.bloom(function () {
+                    revealMessages(false);
+                });
             });
         }, timing.heartAnimationDelay || 5000);
 
@@ -63,6 +68,23 @@
             document.addEventListener('keydown', skip, { once: true });
             document.addEventListener('focusin', skip, { once: true });
         }
+    }
+
+    /**
+     * Runs `cb` once `el` is at least partly on screen — on the next tick if
+     * it already is, so a desktop two-column layout never waits.
+     */
+    function whenOnScreen(el, cb) {
+        if (!('IntersectionObserver' in window)) {
+            cb();
+            return;
+        }
+        const observer = new IntersectionObserver(function (entries) {
+            if (!entries.some((entry) => entry.isIntersecting)) return;
+            observer.disconnect();
+            cb();
+        }, { threshold: 0.2 });
+        observer.observe(el);
     }
 
     /* =================================================================
@@ -411,10 +433,15 @@
         if (!container) return;
 
         const opts = config.fallingText || {};
-        const spawnInterval = opts.spawnInterval || 300;
-        const maxOnScreen = opts.maxOnScreen || 46;
         const minDuration = opts.minDuration || 8;
         const maxDuration = opts.maxDuration || 15;
+
+        // A phone has less screen to fill and less GPU to fill it with, so it
+        // gets a thinner, slower rain.
+        const compact = window.matchMedia('(max-width: 599px)');
+        const limits = () => (compact.matches
+            ? { max: opts.maxOnScreenCompact || 20, interval: opts.spawnIntervalCompact || 520 }
+            : { max: opts.maxOnScreen || 46, interval: opts.spawnInterval || 300 });
 
         // Expand the weights once so spawning is a single array lookup.
         const pool = [];
@@ -427,7 +454,7 @@
         let live = 0;
 
         function spawn() {
-            if (live >= maxOnScreen) return;
+            if (live >= limits().max) return;
 
             const phrase = pool[Math.floor(Math.random() * pool.length)];
             const el = document.createElement('div');
@@ -452,7 +479,7 @@
         }
 
         function start() {
-            if (timer === null) timer = window.setInterval(spawn, spawnInterval);
+            if (timer === null) timer = window.setInterval(spawn, limits().interval);
         }
 
         function stop() {
@@ -465,18 +492,20 @@
             else start();
         });
 
-        // Motion preference can change mid-visit; follow it either way.
+        // Motion preference and screen size can both change mid-visit —
+        // rotating a phone counts — so re-read them rather than caching.
         const apply = function () {
+            stop();
             if (reduceMotion.matches) {
-                stop();
                 container.replaceChildren();
                 live = 0;
-            } else {
+            } else if (!document.hidden) {
                 start();
             }
         };
 
         if (reduceMotion.addEventListener) reduceMotion.addEventListener('change', apply);
+        if (compact.addEventListener) compact.addEventListener('change', apply);
         apply();
     }
 
