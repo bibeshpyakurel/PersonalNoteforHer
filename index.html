@@ -1,26 +1,45 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<script src="https://kit.fontawesome.com/a14ae32021.js" crossorigin="anonymous"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>A Note</title>
+<meta name="description" content="A little note, a heart that blooms one rose at a time, and a counter that hasn't stopped since the night we first spoke." />
+<meta name="author" content="Bibesh" />
+<meta name="color-scheme" content="light dark" />
+<meta name="theme-color" content="#e6d7f0" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#150e21" media="(prefers-color-scheme: dark)" />
 
-<link href="css/default.css" rel="stylesheet">
-<script src="js/garden.js"></script>
-<script src="js/functions.js"></script>
+<!-- Link previews, for when this gets sent to the one person it's for. -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="A Note" />
+<meta property="og:description" content="A little note, a heart that blooms one rose at a time, and a counter that hasn't stopped since the night we first spoke." />
+<meta property="og:url" content="https://bibeshpyakurel.github.io/PersonalNoteforHer/" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="canonical" href="https://bibeshpyakurel.github.io/PersonalNoteforHer/" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23e03a6d' d='M12 21.35 10.55 20.03C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54z'/%3E%3C/svg%3E" />
+
+<link href="css/default.css" rel="stylesheet" />
+
+<script src="config.js" defer></script>
+<script src="js/garden.js" defer></script>
+<script src="js/functions.js" defer></script>
 </head>
 
 <body>
 
-<div id="fallingTextContainer"></div>
+<div id="fallingTextContainer" aria-hidden="true"></div>
 
 <div id="mainDiv">
-	<div id="content">
-		<div id="code">
+	<main id="content">
+		<section class="letter-card">
+			<div class="letter-chrome" aria-hidden="true"><span></span><span></span><span></span></div>
+			<div class="letter-scroll" tabindex="0" role="region" aria-label="A note for Anushka">
+				<div id="code">
             <span class="comments">/**</span><br />
-            <span class="space"/><span class="comments">*A NOTE FOR ANUSHKA</span><br />
-            <span class="space"/><span class="comments">*/</span><br />
+            <span class="space"></span><span class="comments">*A NOTE FOR ANUSHKA</span><br />
+            <span class="space"></span><span class="comments">*/</span><br />
             Hey Anushka!<br />
             Do you remember when we first spoke online?<br />
             <span class="comments">// The night I messaged you — Apr 13, 2025 12:32 AM (EST)</span><br />
@@ -33,14 +52,14 @@
             There were tough nights, and there will be more;<br />
             <span class="comments">// Still, we always find our way back to each other.</span><br />
             Through every up and down my feelings only deepened;<br />
-            <br>
+            <br />
             All I want to say is:<br />
             I will hold you close, always;<br />
-            <br>
+            <br />
             Now, if you want to know more about how I feel, please scroll down<br />
-            <br>
+            <br />
             <span id="heartspan">
-            <i class="fas fa-heart" id="icon"></i>
+            <svg id="icon" viewBox="0 0 24 24" fill="currentColor" role="img" aria-label="heart"><path d="M12 21.35 10.55 20.03C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54z"/></svg>
             </span>
 
             <br /><br />
@@ -52,239 +71,41 @@
             Click each day… and feel how much you mean to me ❤️
 
             <div id="valentineWeek">
-                <div class="valentine-buttons">
-                    <button class="valentine-btn" data-day="rose">🌹 Rose Day</button>
-                    <button class="valentine-btn" data-day="propose">💍 Propose Day</button>
-                    <button class="valentine-btn" data-day="chocolate">🍫 Chocolate Day</button>
-                    <button class="valentine-btn" data-day="teddy">🧸 Teddy Day</button>
-                    <button class="valentine-btn" data-day="promise">🤞 Promise Day</button>
-                    <button class="valentine-btn" data-day="hug">🤗 Hug Day</button>
-                    <button class="valentine-btn" data-day="kiss">💋 Kiss Day</button>
-                    <button class="valentine-btn" data-day="valentine">❤️ Valentine’s Day</button>
+                <div class="valentine-buttons" role="group" aria-label="Valentine week">
+                    <button type="button" class="valentine-btn" data-day="rose" aria-pressed="false">🌹 Rose Day</button>
+                    <button type="button" class="valentine-btn" data-day="propose" aria-pressed="false">💍 Propose Day</button>
+                    <button type="button" class="valentine-btn" data-day="chocolate" aria-pressed="false">🍫 Chocolate Day</button>
+                    <button type="button" class="valentine-btn" data-day="teddy" aria-pressed="false">🧸 Teddy Day</button>
+                    <button type="button" class="valentine-btn" data-day="promise" aria-pressed="false">🤞 Promise Day</button>
+                    <button type="button" class="valentine-btn" data-day="hug" aria-pressed="false">🤗 Hug Day</button>
+                    <button type="button" class="valentine-btn" data-day="kiss" aria-pressed="false">💋 Kiss Day</button>
+                    <button type="button" class="valentine-btn" data-day="valentine" aria-pressed="false">❤️ Valentine’s Day</button>
                 </div>
-                <div id="valentineMessage" class="valentine-message"></div>
+                <div id="valentineMessage" class="valentine-message" role="status" aria-live="polite"></div>
             </div>
-		</div>
-		<div id="loveHeart">
-			<canvas id="garden"></canvas>
+				</div>
+			</div>
+		</section>
+
+		<section id="loveHeart" aria-labelledby="counterLabel">
+			<canvas id="garden" aria-hidden="true"></canvas>
 			<div id="words">
 				<div id="messages">
-					<div style="font-size: 18px; font-weight: 500; margin-bottom: 15px; letter-spacing: 0.5px;">Counting since the day I texted you</div>
+					<div class="counter-label" id="counterLabel">Counting since the day I texted you</div>
 					<div id="elapseClock"></div>
 					<div id="elapsedMonths"></div>
 					<div id="elapsedYears"></div>
 				</div>
-                <div id="loveu" class="cute">
-                    <div class="love-text">I ❤️ you so much</div>
-                    <div class="signature">— Your Bibby</div>
-                </div>
+				<div id="loveu">
+					<div class="love-text">I ❤️ you so much</div>
+					<div class="signature">— Your Bibby</div>
+				</div>
 			</div>
-		</div>
-	</div>
-    <div id="credit">Created with ❤️ by Bibesh</div>
+		</section>
+	</main>
+
+	<footer id="credit">Created with ❤️ by Bibesh</footer>
 </div>
 
-<script>
-// Configuration - customize these values
-const CONFIG = {
-    anniversaryDate: new Date(2025, 3, 13, 0, 32, 0), // April 13, 2025, 12:32 AM EST
-    recipientName: "Anushka",
-    senderName: "BIBESH",
-    message: "I LOVE YOU SO MUCH"
-};
-
-document.addEventListener('DOMContentLoaded', function() {
-    initializePage();
-});
-
-function initializePage() {
-    // Populate background text with "I love you" in multiple languages
-    populateBackgroundText();
-    
-    const loveHeart = document.getElementById('loveHeart');
-    const offsetX = loveHeart.offsetWidth / 2;
-    const offsetY = loveHeart.offsetHeight / 2 - 55;
-    
-    window.pageOffsetX = offsetX;
-    window.pageOffsetY = offsetY;
-    
-    // Setup content positioning
-    updateContentLayout();
-    
-    // Typewriter effect
-    typewriterEffect(code);
-    
-    // Start animations after delay
-    setTimeout(function () {
-        startHeartAnimation();
-    }, 5000);
-
-    // Start time tracking
-    timeElapse(CONFIG.anniversaryDate);
-    setInterval(function () {
-        timeElapse(CONFIG.anniversaryDate);
-    }, 500);
-}
-
-function typewriterEffect(element) {
-    const str = element.innerHTML;
-    element.innerHTML = '';
-    let progress = 0;
-    
-    const timer = setInterval(function() {
-        const current = str.charAt(progress);
-        if (current == '<') {
-            progress = str.indexOf('>', progress) + 1;
-        } else {
-            progress++;
-        }
-        element.innerHTML = str.substring(0, progress) + (progress & 1 ? '_' : '');
-        if (progress >= str.length) {
-            clearInterval(timer);
-            element.innerHTML = str;
-        }
-    }, 75);
-}
-
-// Handle window resize without full page reload
-let resizeTimeout;
-window.addEventListener('resize', function() {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(function() {
-        updateContentLayout();
-    }, 250);
-});
-
-function updateContentLayout() {
-    const loveHeart = document.getElementById('loveHeart');
-    const code = document.getElementById('code');
-    const content = document.getElementById('content');
-    if (!loveHeart || !code || !content) return;
-
-    const idealWidth = loveHeart.offsetWidth + code.offsetWidth;
-    const idealHeight = Math.max(loveHeart.offsetHeight, code.offsetHeight);
-
-    content.style.width = idealWidth + 'px';
-    content.style.height = idealHeight + 'px';
-
-    // Scale down to fit smaller viewports while keeping side-by-side layout
-    const availableWidth = Math.max(window.innerWidth - 40, 1);
-    const availableHeight = Math.max(window.innerHeight - 80, 1);
-    const scaleX = availableWidth / idealWidth;
-    const scaleY = availableHeight / idealHeight;
-    const scale = Math.min(1, scaleX, scaleY);
-
-    content.style.transform = `scale(${scale})`;
-    content.style.transformOrigin = 'top center';
-
-    const scaledHeight = idealHeight * scale;
-    content.style.marginTop = Math.max((window.innerHeight - scaledHeight) / 2, 10) + 'px';
-    content.style.marginLeft = Math.max((window.innerWidth - idealWidth * scale) / 2, 10) + 'px';
-}
-
-function populateBackgroundText() {
-    const phrases = [
-        // English - majority
-        "I LOVE YOU",
-        "I LOVE YOU",
-        "I LOVE YOU",
-        "I LOVE YOU",
-        // Nepali - majority
-        "म तिमीलाई माया गर्छु",
-        "म तिमीलाई माया गर्छु",
-        "म तिमीलाई माया गर्छु",
-        "म तिमीलाई माया गर्छु",
-        // Spanish
-        "TE AMO",
-        "TE AMO",
-        // French
-        "JE T'AIME",
-        "JE T'AIME",
-        // Chinese
-        "我爱你",
-        "我爱你",
-        // Italian
-        "TI AMO",
-        // German
-        "ICH LIEBE DICH",
-        // Portuguese
-        "EU TE AMO",
-        // Russian
-        "Я ЛЮБЛЮ ТЕБЯ",
-        // Japanese
-        "私はあなたを愛しています",
-        // Korean
-        "사랑해요",
-        "사랑해요",
-        "사랑해요",
-        // Thai
-        "ฉันรักคุณ",
-        // Arabic
-        "أنا أحبك",
-        // Hindi
-        "मैं तुम्हें प्यार करता हूँ"
-    ];
-    
-    const container = document.getElementById('fallingTextContainer');
-    
-    // Create falling text elements continuously
-    setInterval(() => {
-        const phrase = phrases[Math.floor(Math.random() * phrases.length)];
-        const element = document.createElement('div');
-        element.className = 'falling-text';
-        element.textContent = phrase;
-        
-        // Random horizontal position
-        const randomX = Math.random() * window.innerWidth;
-        element.style.left = randomX + 'px';
-        element.style.top = '-50px';
-        
-        // Random rotation direction
-        const randomRotation = (Math.random() * 60 - 30); // -30 to 30 degrees
-        element.style.transform = `rotateZ(${randomRotation}deg)`;
-        
-        // Random fall duration (8-15 seconds)
-        const duration = Math.random() * 7 + 8;
-        element.style.animationDuration = duration + 's';
-        
-        // Random opacity
-        element.style.opacity = Math.random() * 0.35 + 0.35;
-        
-        container.appendChild(element);
-        
-        // Remove element after animation completes
-        setTimeout(() => {
-            element.remove();
-        }, duration * 1000);
-    }, 300); // Create new text every 300ms
-}
-
-const valentineMessages = {
-    rose: `🌹 Rose Day\n\nIf I could,\nI’d send you a garden instead of one rose…\n\nBut every flower would still be jealous of you.\n\nSo here’s my rose —\nCarrying all my love, softly reaching your heart.`,
-    propose: `💍 Propose Day\n\nIf loving you was a question,\nMy answer would always be YES.\n\nSo today, once again…\nI choose you.\n\nNot just for now —\nBut for every tomorrow waiting ahead of us.`,
-    chocolate: `🍫 Chocolate Day\n\nLife with you feels sweeter than chocolate…\n\nAnd trust me,\nI don’t even like sharing chocolate —\nBut I’d share my last piece with you.`,
-    teddy: `🧸 Teddy Day\n\nWhenever I’m not around,\nI hope you hug a teddy…\n\nAnd pretend it’s me —\nHolding you tight,\nProtecting your peace.`,
-    promise: `🤞 Promise Day\n\nI promise to stay —\nEven on days I don’t understand you.\n\nI promise to listen —\nEven when words are hard to say.\n\nAnd most of all,\nI promise to love you louder than life gets.`,
-    hug: `🤗 Hug Day\n\nIf you were here right now,\nI wouldn’t say a word…\n\nI’d just pull you close —\nAnd let my arms explain everything.`,
-    kiss: `💋 Kiss Day\n\nA kiss from you isn’t just a kiss…\n\nIt’s my peace,\nMy silence,\nMy favorite place to rest my soul.`,
-    valentine: `❤️ Valentine’s Day\n\nOut of all the people in this world…\n\nMy heart found you.\n\nAnd if I had to live life again —\nI’d still search for you,\nStill fall for you,\nStill choose you…\n\nEvery single time.`
-};
-
-document.addEventListener('click', function (event) {
-    const button = event.target.closest('.valentine-btn');
-    if (!button) return;
-
-    const day = button.getAttribute('data-day');
-    const message = valentineMessages[day];
-    const messageBox = document.getElementById('valentineMessage');
-
-    if (messageBox && message) {
-        messageBox.textContent = message;
-        messageBox.classList.add('visible');
-    }
-});
-
-
-</script>
 </body>
 </html>

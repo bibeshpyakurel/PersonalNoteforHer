@@ -1,438 +1,727 @@
-﻿* {
+/* ====================================================================
+   A Note — stylesheet
+   1. Tokens          6. Valentine week
+   2. Base            7. The heart
+   3. Backdrop        8. Footer
+   4. Layout          9. Motion & print
+   5. The letter
+   ==================================================================== */
+
+/* ------------------------------------------------------------------
+   1. Tokens
+   ------------------------------------------------------------------ */
+
+:root {
+    color-scheme: light dark;
+
+    /* Surface & ink */
+    --bg-1: #f7eefb;
+    --bg-2: #e3d2ef;
+    --bg-3: #f1e0f2;
+
+    --aurora-1: rgba(255, 148, 184, 0.50);
+    --aurora-2: rgba(160, 116, 222, 0.42);
+    --aurora-3: rgba(255, 205, 172, 0.44);
+
+    --ink: #291d3a;
+    --ink-soft: #55456b;
+    --ink-faint: #7d6b93;
+
+    --rose: #e03a6d;
+    --rose-glow: rgba(255, 90, 140, 0.45);
+    --violet: #7742ab;
+    --comment: #2f6b4d;
+
+    --surface: rgba(255, 255, 255, 0.66);
+    --surface-raised: rgba(255, 255, 255, 0.80);
+    --surface-line: rgba(122, 78, 166, 0.16);
+    --surface-sheen: rgba(255, 255, 255, 0.72);
+
+    --falling-ink: rgba(74, 40, 106, 0.55);
+    --grain-blend: soft-light;
+    --grain-opacity: 0.30;
+
+    --shadow-sm: 0 1px 2px rgba(58, 24, 88, 0.05), 0 2px 8px rgba(58, 24, 88, 0.05);
+    --shadow-md: 0 10px 30px rgba(58, 24, 88, 0.10), 0 2px 8px rgba(58, 24, 88, 0.06);
+    --shadow-lg: 0 30px 70px rgba(58, 24, 88, 0.16), 0 10px 24px rgba(58, 24, 88, 0.08);
+
+    /* Shape */
+    --r-sm: 10px;
+    --r-md: 14px;
+    --r-lg: 22px;
+    --r-pill: 999px;
+
+    /* Motion */
+    --ease-out: cubic-bezier(0.16, 1, 0.30, 1);
+    --ease-soft: cubic-bezier(0.65, 0, 0.35, 1);
+
+    /* Type */
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, "JetBrains Mono", "Cascadia Code",
+            Menlo, Consolas, "Liberation Mono", monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto,
+            "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    --serif: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+
+    --fs-letter: clamp(12.5px, 0.42vw + 11px, 14.5px);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-1: #150e21;
+        --bg-2: #1d1230;
+        --bg-3: #241634;
+
+        --aurora-1: rgba(196, 62, 112, 0.34);
+        --aurora-2: rgba(112, 66, 176, 0.34);
+        --aurora-3: rgba(190, 96, 96, 0.22);
+
+        --ink: #f2e9fa;
+        --ink-soft: #c4b3d8;
+        --ink-faint: #9583ac;
+
+        --rose: #ff6d95;
+        --rose-glow: rgba(255, 109, 149, 0.40);
+        --violet: #c39bf0;
+        --comment: #7fd0a4;
+
+        --surface: rgba(255, 255, 255, 0.055);
+        --surface-raised: rgba(255, 255, 255, 0.10);
+        --surface-line: rgba(255, 255, 255, 0.13);
+        --surface-sheen: rgba(255, 255, 255, 0.14);
+
+        --falling-ink: rgba(238, 222, 255, 0.42);
+        --grain-blend: overlay;
+        --grain-opacity: 0.20;
+
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.30);
+        --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.40);
+        --shadow-lg: 0 30px 70px rgba(0, 0, 0, 0.50), 0 10px 24px rgba(0, 0, 0, 0.30);
+    }
+}
+
+/* ------------------------------------------------------------------
+   2. Base
+   ------------------------------------------------------------------ */
+
+*,
+*::before,
+*::after {
     box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
 }
 
 body {
     margin: 0;
-    padding: 0;
-    background: linear-gradient(135deg, #E6D7F0 0%, #D4C5E2 50%, #E8D5F2 100%);
-    font-size: 12px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    font-family: "sans-serif";
     min-height: 100vh;
+    min-height: 100svh;
     position: relative;
+    overflow-x: hidden;
+    font-family: var(--sans);
+    font-size: 16px;
+    color: var(--ink);
+    background:
+        linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 50%, var(--bg-3) 100%)
+        fixed;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+:where(button):focus-visible,
+:where([tabindex]):focus-visible {
+    outline: 2px solid var(--rose);
+    outline-offset: 3px;
+    border-radius: var(--r-sm);
+}
+
+/* Available to assistive tech, invisible on screen. */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ------------------------------------------------------------------
+   3. Backdrop — aurora, grain, falling text
+   ------------------------------------------------------------------ */
+
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Slow-drifting colour fields. */
+body::before {
+    background:
+        radial-gradient(38% 44% at 20% 26%, var(--aurora-1), transparent 62%),
+        radial-gradient(44% 46% at 80% 20%, var(--aurora-2), transparent 64%),
+        radial-gradient(48% 42% at 58% 84%, var(--aurora-3), transparent 66%);
+    animation: aurora-drift 48s var(--ease-soft) infinite alternate;
+    will-change: transform;
+}
+
+/* A whisper of film grain so the gradients never band. */
+body::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: var(--grain-blend);
+    opacity: var(--grain-opacity);
+}
+
+@keyframes aurora-drift {
+    from { transform: translate3d(-2%, -1%, 0) scale(1.02); }
+    to   { transform: translate3d(2%, 2%, 0) scale(1.10); }
 }
 
 #fallingTextContainer {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
+    inset: 0;
+    z-index: 1;
     overflow: hidden;
-    z-index: 0;
+    pointer-events: none;
+    contain: strict;
 }
 
 .falling-text {
     position: absolute;
-    font-family: Georgia, serif;
-    font-size: 18px;
-    font-weight: bold;
-    color: rgba(0, 0, 0, 0.12);
+    top: 0;
+    font-family: var(--serif);
+    color: var(--falling-ink);
     white-space: nowrap;
-    animation: fall linear forwards;
-    pointer-events: none;
+    opacity: 0;
+    animation-name: fall;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+    will-change: transform, opacity;
+}
+
+/* Three depth bands: nearer text is larger, brighter and sharper. */
+.falling-text.depth-1 {
+    font-size: clamp(11px, 1.1vw, 14px);
+    --o: 0.22;
+    filter: blur(0.7px);
+}
+
+.falling-text.depth-2 {
+    font-size: clamp(14px, 1.5vw, 18px);
+    --o: 0.32;
+}
+
+.falling-text.depth-3 {
+    font-size: clamp(17px, 2vw, 24px);
+    font-weight: 700;
+    --o: 0.44;
 }
 
 @keyframes fall {
-    to {
-        transform: translateY(100vh) rotateZ(360deg);
-        opacity: 0;
-    }
+    0%   { transform: translate3d(0, -20vh, 0) rotate(var(--tilt, 0deg)); opacity: 0; }
+    9%   { opacity: var(--o, 0.3); }
+    86%  { opacity: var(--o, 0.3); }
+    100% { transform: translate3d(0, 112vh, 0) rotate(calc(var(--tilt, 0deg) + 360deg)); opacity: 0; }
 }
+
+/* ------------------------------------------------------------------
+   4. Layout
+   ------------------------------------------------------------------ */
 
 #mainDiv {
     position: relative;
-    z-index: 1;
-    width: 100%;
-    /* let content determine height so we can align at top */
-    min-height: 100vh;
+    z-index: 2;
     display: flex;
-    align-items: flex-start; /* place content at top */
-    justify-content: center; /* center horizontally */
-    padding-top: 40px; /* spacing from top */
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    min-height: 100svh;
+    padding: clamp(16px, 4vh, 48px) clamp(16px, 4vw, 40px);
 }
 
 #content {
-    display: flex;
-    gap: 20px;
-    flex-wrap: nowrap;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: minmax(0, 560px) minmax(0, 670px);
     align-items: center;
-    max-width: 1400px;
-    padding: 0;
-    transform-origin: top center;
-}
-
-#loveHeart {
-    width: 670px;
-    height: 625px;
-    flex-shrink: 0;
-    order: 2;
-    position: relative; /* allow absolute children inside */
-}
-
-#garden {
+    justify-content: center;
+    gap: clamp(20px, 3vw, 40px);
     width: 100%;
-    height: 100%;
-    border-radius: 8px;
+    max-width: 1290px;
+    margin: auto 0;
 }
 
-#elapseClock {
-    text-align: right;
-    font-size: 18px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+/* Everything lifts into place once the scripts are ready. */
+.letter-card,
+#loveHeart {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out);
 }
 
-#words {
-    font-family: "sans-serif";
-    width: 500px;
-    font-size: 24px;
-    color: #666;
+body.is-ready .letter-card,
+body.is-ready #loveHeart {
+    opacity: 1;
+    transform: none;
 }
 
-#messages {
-    display: none;
-    text-align: center;
-    font-size: 30px;
-    margin-bottom: 20px;
+body.is-ready #loveHeart {
+    transition-delay: 0.12s;
 }
 
-#elapsedMonths {
-    font-size: 12px;
-    color: #555;
-    text-align: center;
-    margin-top: 8px;
+@media (max-width: 1023px) {
+    #content {
+        grid-template-columns: minmax(0, 620px);
+        gap: clamp(24px, 5vw, 40px);
+    }
 }
 
-#elapsedYears {
-    font-size: 14px;
-    color: #444;
-    text-align: center;
-    margin-top: 4px;
-    font-weight: 600;
+/* ------------------------------------------------------------------
+   5. The letter
+   ------------------------------------------------------------------ */
+
+.letter-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    border: 1px solid var(--surface-line);
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(24px) saturate(140%);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    overflow: hidden;
 }
 
-#elapseClock .digit {
-    font-family: "Courier New", monospace;
-    font-size: 40px;
-    text-align: center;
-    font-weight: bold;
+/* Inner highlight — the thing that makes glass read as glass. */
+.letter-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border-top: 1px solid var(--surface-sheen);
+    pointer-events: none;
+    mix-blend-mode: overlay;
 }
 
-#loveu {
-    padding: 5px;
-    font-size: 22px;
-    margin-top: 140px;
-    margin-right: 120px;
-    text-align: right;
-    display: none;
+.letter-chrome {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--surface-line);
+    flex: none;
 }
 
-#loveu .signature {
-    margin-top: 10px;
-    font-size: 20px;
-    font-style: italic;
+.letter-chrome span {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.55;
 }
 
-/* Cute smaller loveu variant */
-#loveu.cute {
-    display: none; /* controlled by JS */
-    margin-top: 55px;
-    margin-right: 0;
-    text-align: center;
-    background: transparent;
-    padding: 6px 10px;
-    border-radius: 14px;
-    width: auto;
+.letter-chrome span:nth-child(1) { color: #ff5f57; }
+.letter-chrome span:nth-child(2) { color: #febc2e; }
+.letter-chrome span:nth-child(3) { color: #28c840; }
+
+/* Animatable so the fade can ease away instead of snapping. */
+@property --fade {
+    syntax: "<length>";
+    inherits: false;
+    initial-value: 56px;
 }
 
-#loveu.cute .love-text {
-    font-size: 18px;
-    font-weight: 600;
-    color: #000;
-    letter-spacing: 0.6px;
+.letter-scroll {
+    position: relative;
+    height: clamp(360px, 56vh, 520px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 22px clamp(18px, 2.4vw, 28px) 26px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--surface-line) transparent;
+
+    /* Fades the last few lines out until you've reached the end. Masking the
+       content beats an overlay gradient — it works on any backdrop, in either
+       theme, without tinting what's underneath. */
+    --fade: 56px;
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--fade)), transparent);
+    mask-image: linear-gradient(to bottom, #000 calc(100% - var(--fade)), transparent);
+    transition: --fade 0.4s var(--ease-out);
 }
 
-#loveu.cute .signature {
-    display: block;
-    margin-top: 6px;
-    font-size: 13px;
-    font-style: italic;
-    color: #444;
+.letter-card.is-at-end .letter-scroll {
+    --fade: 0px;
 }
 
-@media (max-width: 768px) {
-    #loveu.cute { padding: 6px 10px; }
-    #loveu.cute .love-text { font-size: 16px; }
-    #loveu.cute .signature { font-size: 12px; }
+.letter-scroll::-webkit-scrollbar {
+    width: 10px;
+}
+
+.letter-scroll::-webkit-scrollbar-thumb {
+    background: var(--surface-line);
+    border-radius: var(--r-pill);
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+
+.letter-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--ink-faint);
+    background-clip: content-box;
 }
 
 #code {
-    width: 520px;
-    height: 480px;
-    color: #000;
-    font-family: "Consolas", "Monaco", "Bitstream Vera Sans Mono", "Courier New", monospace;
-    font-size: 12px;
-    overflow-y: auto;
-    padding: 15px;
-    background: #f5f5f5;
-    border-radius: 8px;
-    flex-shrink: 0;
-    order: 1;
+    margin: 0;
+    color: var(--ink);
+    font-family: var(--mono);
+    font-size: var(--fs-letter);
+    line-height: 1.95;
+    letter-spacing: 0.01em;
+    text-wrap: pretty;
 }
 
-#valentineWeek {
-    margin-top: 14px;
-    padding-top: 10px;
-    border-top: 1px dashed rgba(120, 80, 160, 0.35);
-}
-
-.valentine-buttons {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
-    margin-top: 10px;
-}
-
-.valentine-btn {
-    background: rgba(255, 255, 255, 0.7);
-    border: 1px solid rgba(120, 80, 160, 0.35);
-    color: #3b2d4f;
-    font-size: 12px;
-    padding: 6px 8px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.valentine-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 12px rgba(80, 40, 120, 0.15);
-}
-
-.valentine-message {
-    margin-top: 10px;
-    background: rgba(255, 255, 255, 0.75);
-    border-radius: 12px;
-    padding: 10px 12px;
-    white-space: pre-wrap;
-    color: #3b2d4f;
-    font-size: 12px;
-    display: none;
-}
-
-.valentine-message.visible {
-    display: block;
-}
-
-#code .string {
-    color: #2a36ff;
-}
-
-#code .keyword {
-    color: #7f0055;
-    font-weight: bold;
-}
-
-#code .placeholder {
-    margin-left: 15px;
+#code .comments {
+    color: var(--comment);
 }
 
 #code .space {
     margin-left: 7px;
 }
 
-#code .comments {
-    color: #3f7f5f;
+/* Typewriter: pending nodes are removed from flow until they're reached. */
+.tw-pending {
+    display: none !important;
 }
 
-#copyright {
-    margin-top: 10px;
-    text-align: center;
-    width: 100%;
-    color: #666;
+.tw-caret {
+    display: inline-block;
+    width: 0.5em;
+    height: 1.05em;
+    margin-left: 1px;
+    vertical-align: -0.18em;
+    border-radius: 1px;
+    background: var(--rose);
+    animation: caret-blink 1.05s steps(1, end) infinite;
 }
 
-#copyright a {
-    color: #666;
-}
-
-#credit {
-    width: 100%;
-    text-align: center;
-    margin-top: 18px;
-    color: #3b2d4f;
-    font-size: 13px;
-    letter-spacing: 0.4px;
-}
-
-#icon {
-    font-size: 48px;
-    color: #ff3b6c;
-    margin: 50px;
-    display: block;
-    text-shadow: 0 4px 12px rgba(255, 59, 108, 0.45), 0 0 18px rgba(255, 120, 170, 0.35);
-    animation: heartPulse 1.8s ease-in-out infinite;
-}
-
-@keyframes heartPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.08); }
+@keyframes caret-blink {
+    0%, 49%   { opacity: 1; }
+    50%, 100% { opacity: 0; }
 }
 
 #heartspan {
-    text-align: center;
-    margin: 20px;
     display: block;
+    margin: 20px 0;
+    text-align: center;
 }
 
-/* Romantic text inside heart overlay */
-#heartText {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    text-align: center;
-    color: rgba(255,255,255,0.95);
-    font-family: 'Brush Script MT', 'Lucida Handwriting', cursive, Georgia, serif;
-    font-size: 34px;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.5), 0 1px 0 rgba(255,80,100,0.2);
-    line-height: 1.1;
-    padding: 10px 20px;
-    border-radius: 12px;
+#icon {
+    display: inline-block;
+    width: 52px;
+    height: 52px;
+    margin: 26px 0;
+    color: var(--rose);
+    filter: drop-shadow(0 6px 16px var(--rose-glow));
+    animation: heart-pulse 1.8s var(--ease-soft) infinite;
+}
+
+@keyframes heart-pulse {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.09); }
+}
+
+/* ------------------------------------------------------------------
+   6. Valentine week
+   ------------------------------------------------------------------ */
+
+#valentineWeek {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--surface-line);
+}
+
+.valentine-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 9px;
+    margin-top: 12px;
+}
+
+.valentine-btn {
+    position: relative;
+    padding: 10px 12px;
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    text-align: left;
+    color: var(--ink);
+    background: var(--surface-raised);
+    border: 1px solid var(--surface-line);
+    border-radius: var(--r-md);
+    cursor: pointer;
+    transition:
+        transform 0.22s var(--ease-out),
+        box-shadow 0.22s var(--ease-out),
+        border-color 0.22s var(--ease-out),
+        background-color 0.22s var(--ease-out);
+}
+
+@media (hover: hover) {
+    .valentine-btn:hover {
+        transform: translateY(-2px);
+        border-color: var(--rose);
+        box-shadow: var(--shadow-md);
+    }
+}
+
+.valentine-btn:active {
+    transform: translateY(0) scale(0.985);
+}
+
+.valentine-btn[aria-pressed="true"] {
+    border-color: var(--rose);
+    background: color-mix(in srgb, var(--rose) 12%, var(--surface-raised));
+    box-shadow: inset 0 0 0 1px var(--rose), var(--shadow-sm);
+}
+
+.valentine-message {
+    margin-top: 14px;
+    padding: 16px 18px;
+    border-radius: var(--r-md);
+    border-left: 3px solid var(--rose);
+    background: var(--surface-raised);
+    box-shadow: var(--shadow-sm);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 14px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    text-wrap: pretty;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+}
+
+.valentine-message:empty {
     display: none;
 }
 
-#heartText .signature {
+.valentine-message.is-visible {
+    opacity: 1;
+    transform: none;
+}
+
+/* ------------------------------------------------------------------
+   7. The heart
+   ------------------------------------------------------------------ */
+
+#loveHeart {
+    position: relative;
+    width: 100%;
+    max-width: 670px;
+    aspect-ratio: 670 / 625;
+    margin-inline: auto;
+}
+
+/* A glow that warms up once the heart has finished blooming. */
+#loveHeart::before {
+    content: "";
+    position: absolute;
+    inset: 8% 6% 4%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, var(--rose-glow), transparent 72%);
+    opacity: 0;
+    transition: opacity 2.4s var(--ease-out);
+    pointer-events: none;
+}
+
+#loveHeart.is-bloomed::before {
+    opacity: 0.55;
+}
+
+#garden {
     display: block;
-    margin-top: 8px;
-    font-size: 18px;
+    width: 100%;
+    height: 100%;
+}
+
+#words {
+    position: absolute;
+    top: 31%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(78%, 430px);
+    text-align: center;
+    color: var(--ink-soft);
+    pointer-events: none;
+}
+
+#messages,
+#loveu {
+    opacity: 0;
+    transition: opacity 2s var(--ease-out);
+}
+
+#messages.is-visible,
+#loveu.is-visible {
+    opacity: 1;
+}
+
+.counter-label {
+    font-size: clamp(13px, 1.1vw, 16px);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    margin-bottom: 14px;
+}
+
+#elapseClock {
+    font-size: clamp(11px, 0.9vw, 13px);
+    color: var(--ink-soft);
+    line-height: 2.2;
+}
+
+#elapseClock .digit {
+    font-family: var(--mono);
+    font-size: clamp(22px, 2.6vw, 34px);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+}
+
+#elapsedMonths {
+    margin-top: 10px;
+    font-size: clamp(11px, 0.9vw, 13px);
+    color: var(--ink-soft);
+}
+
+#elapsedYears {
+    margin-top: 4px;
+    font-size: clamp(12px, 1vw, 15px);
+    font-weight: 600;
+    color: var(--ink);
+}
+
+#loveu {
+    margin-top: clamp(24px, 5vw, 56px);
+    text-align: center;
+}
+
+#loveu .love-text {
+    font-size: clamp(15px, 1.5vw, 19px);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--ink);
+}
+
+#loveu .signature {
+    display: block;
+    margin-top: 7px;
+    font-family: var(--serif);
+    font-size: clamp(12px, 1.1vw, 14px);
     font-style: italic;
-    color: rgba(255,240,240,0.95);
+    color: var(--ink-soft);
 }
 
-#heartText .heartCounters {
-    margin-top: 6px;
+/* ------------------------------------------------------------------
+   8. Footer
+   ------------------------------------------------------------------ */
+
+#credit {
+    margin-top: clamp(20px, 4vh, 34px);
+    text-align: center;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
 }
 
-#heartText .heartCounters div {
-    color: rgba(255,240,240,0.95);
-    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
-}
+/* ------------------------------------------------------------------
+   9. Motion & print
+   ------------------------------------------------------------------ */
 
-@media (max-width: 768px) {
-    #heartText { font-size: 22px; }
-    #heartText .signature { font-size: 14px; }
-}
-
-/* Mobile Responsive */
-@media (max-width: 1400px) {
-    #content {
-        flex-wrap: nowrap;
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
     }
-}
 
-@media (max-width: 1024px) {
+    #fallingTextContainer {
+        display: none;
+    }
+
+    .letter-card,
     #loveHeart {
-        width: 500px;
-        height: 500px;
-    }
-    
-    #code {
-        width: 380px;
-        height: 350px;
-        font-size: 11px;
-    }
-    
-    #words {
-        width: 380px;
-        font-size: 18px;
+        opacity: 1;
+        transform: none;
     }
 }
 
-@media (max-width: 768px) {
-    #content {
-        flex-direction: row;
-        gap: 30px;
-    }
-    
-    #loveHeart {
-        width: 100%;
-        max-width: 400px;
-        height: 400px;
-    }
-    
-    #code {
-        width: 100%;
-        max-width: 400px;
-        height: 300px;
-        font-size: 11px;
-    }
-    
-    #words {
-        width: 100%;
-        max-width: 380px;
-        font-size: 16px;
-    }
-    
-    #loveu {
-        margin-right: 0;
-        text-align: center;
-    }
-    
-    #elapseClock .digit {
-        font-size: 28px;
-    }
-    
-    #messages {
-        font-size: 24px;
+/* Some people turn transparency down at the OS level; respect it. */
+@media (prefers-reduced-transparency: reduce) {
+    .letter-card {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: var(--surface-raised);
     }
 }
 
-@media (max-width: 480px) {
-    #mainDiv {
-        padding: 10px;
+@media (prefers-contrast: more) {
+    :root {
+        --surface: rgba(255, 255, 255, 0.94);
+        --surface-raised: #fff;
+        --surface-line: rgba(41, 29, 58, 0.45);
+        --ink-soft: var(--ink);
     }
-    
+}
+
+@media print {
+    body::before,
+    body::after,
+    #fallingTextContainer,
+    #loveHeart,
+    .letter-chrome {
+        display: none !important;
+    }
+
+    body {
+        background: #fff;
+        color: #000;
+    }
+
     #content {
-        padding: 10px;
-        gap: 20px;
+        display: block;
+        max-width: none;
     }
-    
-    #loveHeart {
-        width: 100%;
-        max-width: 300px;
-        height: 300px;
+
+    .letter-card {
+        border: 0;
+        box-shadow: none;
+        background: none;
+        backdrop-filter: none;
     }
-    
-    #code {
-        width: 100%;
-        max-width: 300px;
-        height: 250px;
-        font-size: 10px;
+
+    .letter-scroll {
+        height: auto;
+        overflow: visible;
+        padding: 0;
+        -webkit-mask-image: none;
+        mask-image: none;
     }
-    
-    #words {
-        width: 100%;
-        max-width: 300px;
-        font-size: 14px;
-    }
-    
-    #elapseClock .digit {
-        font-size: 20px;
-    }
-    
-    #loveu {
-        font-size: 18px;
-        margin-top: 40px;
-    }
-    
-    #loveu .signature {
-        font-size: 16px;
+
+    .valentine-message {
+        opacity: 1;
+        transform: none;
     }
 }
